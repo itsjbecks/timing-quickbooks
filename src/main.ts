@@ -26,6 +26,16 @@ const importFile = async (
       .on("end", () => resolve("Import Complete"));
   });
 
+const getFileFromArgv = () => {
+  const args = process.argv.slice(2);
+  if (args.length === 0) throw new Error("No file specified");
+
+  const possibleFile = args[0];
+  if (!possibleFile.endsWith(".csv")) throw new Error("File must be a csv");
+
+  return possibleFile;
+};
+
 type Row = {
   Project: string;
   Day: string;
@@ -35,7 +45,8 @@ type Row = {
 
 const main = async () => {
   try {
-    const FILE = "./data/wx-april.csv";
+    // const FILE = "./data/wx-april.csv";
+    const FILE = getFileFromArgv();
 
     const rows: Row[] = [];
     await importFile(FILE, (row) => rows.push(row));
