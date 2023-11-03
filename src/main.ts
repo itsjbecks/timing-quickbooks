@@ -43,19 +43,31 @@ type Row = {
   Notes: string;
 };
 
+type RowGerman = {
+  Projekt: string;
+  Tag: string;
+  Dauer: number;
+  Notizen: string;
+};
+
 const main = async () => {
   try {
     // const FILE = "./data/wx-april.csv";
     const FILE = getFileFromArgv();
 
-    const rows: Row[] = [];
+    const rows: (Row & RowGerman)[] = [];
     await importFile(FILE, (row) => rows.push(row));
 
     // group rows by project and then sub group by day. Sum the duration of each day and combine the notes for each day
     const projectsByDay = rows.reduce((acc, row) => {
       // if (row.Project !== "Pelicargo") return acc;
 
-      const { Project, Day, Duration, Notes } = row;
+
+      const Project = row.Project || row.Projekt;
+      const Day = row.Day || row.Tag;
+      const Duration = row.Duration || row.Dauer;
+      const Notes = row.Notes || row.Notizen;
+
       if (!acc[Project]) {
         acc[Project] = {
           name: Project,
